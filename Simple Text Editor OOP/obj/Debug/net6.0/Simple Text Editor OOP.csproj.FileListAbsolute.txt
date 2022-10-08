@@ -1,0 +1,15 @@
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\bin\Debug\net6.0\Simple Text Editor OOP.exe
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\bin\Debug\net6.0\Simple Text Editor OOP.deps.json
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\bin\Debug\net6.0\Simple Text Editor OOP.runtimeconfig.json
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\bin\Debug\net6.0\Simple Text Editor OOP.dll
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\bin\Debug\net6.0\Simple Text Editor OOP.pdb
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\obj\Debug\net6.0\Simple Text Editor OOP.csproj.AssemblyReference.cache
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\obj\Debug\net6.0\Simple Text Editor OOP.GeneratedMSBuildEditorConfig.editorconfig
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\obj\Debug\net6.0\Simple Text Editor OOP.AssemblyInfoInputs.cache
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\obj\Debug\net6.0\Simple Text Editor OOP.AssemblyInfo.cs
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\obj\Debug\net6.0\Simple Text Editor OOP.csproj.CoreCompileInputs.cache
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\obj\Debug\net6.0\Simple Text Editor OOP.dll
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\obj\Debug\net6.0\refint\Simple Text Editor OOP.dll
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\obj\Debug\net6.0\Simple Text Editor OOP.pdb
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\obj\Debug\net6.0\Simple Text Editor OOP.genruntimeconfig.cache
+D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\obj\Debug\net6.0\ref\Simple Text Editor OOP.dll
