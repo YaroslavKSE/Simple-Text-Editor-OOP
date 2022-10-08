@@ -27,7 +27,7 @@ public class TextProcessor
                 wordLenght++;
             }
 
-        _freeSpace += input.Length;
+        _freeSpace += input!.Length;
         if (_savedText.Count == 0)
             _savedText.Add(_savedLine);
         else
@@ -41,7 +41,7 @@ public class TextProcessor
 
         return newArray;
     }
-    
+
     public void AddTextInside(string? input, int line, int column)
     {
         while (line > _rows)
@@ -52,7 +52,7 @@ public class TextProcessor
         }
 
         var text = GetLine(_savedText, line - 1);
-        _savedText[line - 1] = ExpandArray(_savedText[line - 1], input.Length + _savedText[line - 1].Length);
+        _savedText[line - 1] = ExpandArray(_savedText[line - 1], input!.Length + _savedText[line - 1].Length);
         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
         if (_savedText[line - 1][column] == null)
         {
@@ -97,6 +97,54 @@ public class TextProcessor
             }
         }
     }
+
+    public string SearchSubstring(string? substring)
+    {
+        var sameLetters = "";
+        var substringFound = "";
+        var occurrence = 0;
+        var counter = 0;
+        var substringArray = substring.ToArray();
+        foreach (var line in _savedText)
+            for (var i = 0; i < line.Length; i++)
+            {
+                if (line[i] == substringArray[counter].ToString() && counter < substring.Length)
+                {
+                    counter++;
+                    sameLetters += line[i];
+                }
+
+                if (counter != 0 && counter <= substring.Length - 1)
+                    if (line[i + 1] != substringArray[counter].ToString())
+                    {
+                        sameLetters = "";
+                        counter = 0;
+                    }
+
+                if (i + 1 >= line.Length && counter == 1)
+                {
+                    substringFound += $"[{_savedText.IndexOf(line) - 1}] ";
+                    counter = 0;
+                    occurrence++;
+                    sameLetters = "";
+                }
+
+                if (counter > substring.Length - 1 && i + 1 < line.Length)
+                    if (line[i + 1] != substringArray[substring.Length - 1].ToString())
+                    {
+                        counter = 0;
+                        if (sameLetters == substring)
+                        {
+                            substringFound += $"[{_savedText.IndexOf(line)}] ";
+                            occurrence++;
+                            sameLetters = "";
+                        }
+                    }
+            }
+
+        return $"{occurrence} times at line: {substringFound}.";
+    }
+
     private string GetLine(List<string[]> array, int line)
     {
         var text = "";
@@ -104,7 +152,7 @@ public class TextProcessor
 
         return text;
     }
-    
+
     public string GetText()
     {
         var text = "";
@@ -116,6 +164,7 @@ public class TextProcessor
 
         return text;
     }
+
     private string[] SplitAt(string source, params int[] index)
     {
         index = index.Distinct().OrderBy(x => x).ToArray();
@@ -127,8 +176,8 @@ public class TextProcessor
         output[index.Length] = source.Substring(pos);
         return output;
     }
-    
-    private void LoadToMemory(string[] array)
+
+    public void LoadToMemory(string[] array)
     {
         var counter = 0;
         _rows = 1;
@@ -156,7 +205,7 @@ public class TextProcessor
     {
         _rows++;
         _freeSpace = 0;
-        _savedText.Add(new string[]{ });
+        _savedText.Add(new string[] { });
         _savedLine = new string[] { };
     }
 }

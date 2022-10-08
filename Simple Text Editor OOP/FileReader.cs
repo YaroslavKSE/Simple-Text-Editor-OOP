@@ -2,7 +2,7 @@
 
 public class FileReader
 {
-    private string _path;
+    private readonly string _path;
 
     public FileReader(string path)
     {
@@ -15,5 +15,3 @@ public class FileReader
         return lines;
     }
 }
-
-

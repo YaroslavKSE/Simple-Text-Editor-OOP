@@ -2,7 +2,7 @@
 
 public class FileWriter
 {
-    private string _path;
+    private readonly string _path;
 
     public FileWriter(string path)
     {
@@ -12,7 +12,7 @@ public class FileWriter
     public void WriteToFile(string text)
     {
         if (_path.EndsWith(".txt"))
-        { 
+        {
             using StreamWriter file = new(_path);
             file.WriteLineAsync(text);
         }
