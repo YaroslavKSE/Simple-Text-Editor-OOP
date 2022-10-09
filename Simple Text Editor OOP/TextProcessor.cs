@@ -6,12 +6,27 @@ public class TextProcessor
     private string[] _savedLine;
     private int _freeSpace;
     private int _rows = 1;
+    private Dictionary<Pointer, string> _ctrlz = new();
+
+    private struct Pointer
+    {
+        private int _line { get; set; }
+        private int _index { get; set; }
+
+        public Pointer(int line, int index)
+        {
+            _line = line;
+            _index = index;
+        }
+    }
+
 
     public TextProcessor(List<string[]> savedText, string[] savedLine)
     {
         _savedText = savedText;
         _savedLine = savedLine;
     }
+
 
     public void AddText(string? input)
     {
@@ -171,10 +186,26 @@ public class TextProcessor
         var output = new string[index.Length + 1];
         var pos = 0;
 
-        for (var i = 0; i < index.Length; pos = index[i++]) output[i] = source.Substring(pos, index[i] - pos);
+        for (var i = 0; i < index.Length; pos = index[i++])
+        {
+            output[i] = source.Substring(pos, index[i] - pos);
+        }
 
         output[index.Length] = source.Substring(pos);
         return output;
+    }
+
+    public void Delete(int line, int index, int length)
+    {
+        var deletedElement = "";
+        var pointer = new Pointer(line, index);
+        for (int i = index; i < index + length; i++)
+        {
+            deletedElement += _savedText[line - 1][i];
+            _savedText[line - 1][i] = "";
+        }
+
+        _ctrlz.Add(pointer, deletedElement);
     }
 
     public void LoadToMemory(string[] array)

@@ -89,5 +89,15 @@ while (true)
             Console.WriteLine($"Founded '{userInput5}' {savedText.SearchSubstring(userInput5)}");
             break;
         }
+        case "8":
+        {
+            Console.WriteLine("Choose line, index and number of symbols: ");
+            var userInput6 = Console.ReadLine()!.Split(' ');
+            var line = int.Parse(userInput6[0]);
+            var index = int.Parse(userInput6[1]);
+            var length = int.Parse(userInput6[2]);
+            savedText.Delete(line, index, length);
+            break;
+        }
     }
 }
