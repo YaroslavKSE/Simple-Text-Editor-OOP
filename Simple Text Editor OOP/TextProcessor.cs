@@ -54,17 +54,13 @@ public class TextProcessor
         }
 
         var text = GetLine(_savedText, line - 1);
-        if (input.Length > _savedText[line - 1].Length)
-        {
-            _savedText[line - 1] = ExpandArray(_savedText[line - 1], input!.Length + _savedText[line - 1].Length);
-        }
-
+        _savedText[line - 1] = ExpandArray(_savedText[line - 1], input!.Length + _savedText[line - 1].Length);
         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
         if (_savedText[line - 1][column] == null)
         {
             var wordLenght = 0;
             while (wordLenght != input.Length)
-                for (var i = column; i < input.Length; i++)
+                for (var i = column; i < input.Length + column; i++)
                 {
                     _savedText[line - 1][i] = input[wordLenght].ToString();
                     wordLenght++;
@@ -199,7 +195,18 @@ public class TextProcessor
         var pointer = new Cursor(line, index, deletedElement);
         _ctrlz.Add(pointer);
         _savedText[line - 1] = new string[_savedText[line - 1].Length - index - length];
-        AddTextInside(substrings[1], line, 0);
+        if (index != 0)
+        {
+            var firstPart = substrings[0].Split($"{deletedElement}");
+            AddTextInside(firstPart[0], line, 0);
+            
+            AddTextInside(substrings[1], line, firstPart[0].Length);
+        }
+
+        if (index == 0)
+        {
+            AddTextInside(substrings[1], line, 0);    
+        }
     }
 
     public void Undo()
