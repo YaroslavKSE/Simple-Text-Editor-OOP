@@ -99,5 +99,9 @@ while (true)
             savedText.Delete(line, index, length);
             break;
         }
+        case "9":
+            savedText.Undo();
+            break;
     }
+    
 }

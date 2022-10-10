@@ -6,20 +6,7 @@ public class TextProcessor
     private string[] _savedLine;
     private int _freeSpace;
     private int _rows = 1;
-    private Dictionary<Pointer, string> _ctrlz = new();
-
-    private struct Pointer
-    {
-        private int _line { get; set; }
-        private int _index { get; set; }
-
-        public Pointer(int line, int index)
-        {
-            _line = line;
-            _index = index;
-        }
-    }
-
+    private List<Cursor> _ctrlz = new();
 
     public TextProcessor(List<string[]> savedText, string[] savedLine)
     {
@@ -67,7 +54,11 @@ public class TextProcessor
         }
 
         var text = GetLine(_savedText, line - 1);
-        _savedText[line - 1] = ExpandArray(_savedText[line - 1], input!.Length + _savedText[line - 1].Length);
+        if (input.Length > _savedText[line - 1].Length)
+        {
+            _savedText[line - 1] = ExpandArray(_savedText[line - 1], input!.Length + _savedText[line - 1].Length);
+        }
+
         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
         if (_savedText[line - 1][column] == null)
         {
@@ -198,14 +189,50 @@ public class TextProcessor
     public void Delete(int line, int index, int length)
     {
         var deletedElement = "";
-        var pointer = new Pointer(line, index);
+        var substrings = SplitAt(GetLine(_savedText, line - 1), index + length);
         for (int i = index; i < index + length; i++)
         {
             deletedElement += _savedText[line - 1][i];
             _savedText[line - 1][i] = "";
         }
 
-        _ctrlz.Add(pointer, deletedElement);
+        var pointer = new Cursor(line, index, deletedElement);
+        _ctrlz.Add(pointer);
+        _savedText[line - 1] = new string[_savedText[line - 1].Length - index - length];
+        AddTextInside(substrings[1], line, 0);
+    }
+
+    public void Undo()
+    {
+        if (_ctrlz.Count == 0)
+        {
+            return;
+        }
+
+        if (_ctrlz.Count == 1)
+        {
+            AddTextInside(_ctrlz[0].GetText(), _ctrlz[0].GetLine(), _ctrlz[0].GetIndex());
+            _ctrlz.Remove(_ctrlz[0]);
+        }
+        else
+        {
+            AddTextInside(_ctrlz[^1].GetText(), _ctrlz[^1].GetLine(), _ctrlz[^1].GetIndex());
+            _ctrlz.Remove(_ctrlz[^1]);
+        }
+
+        // not implemented yet
+    }
+
+    public void CutArray(int line, int index, int symbolsLength)
+    {
+        var deletedElement = "";
+        for (int i = index; i < index + symbolsLength; i++)
+        {
+            deletedElement += _savedText[line - 1][i];
+            _savedText[line - 1][i] = "";
+        }
+        var pointer = new Cursor(line, index, deletedElement);
+        _ctrlz.Add(pointer);
     }
 
     public void LoadToMemory(string[] array)
@@ -225,6 +252,7 @@ public class TextProcessor
         _rows = array.Length;
         _freeSpace = array[_rows - 1].Length;
     }
+
 
     public void ClearText()
     {
