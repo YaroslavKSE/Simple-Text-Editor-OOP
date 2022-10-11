@@ -1,29 +1,30 @@
 ﻿namespace Simple_Text_Editor_OOP;
 
-public struct Cursor
+public readonly struct Cursor
 {
-    private int _line { get; set; }
-    private int _index { get; set; }
-    private string _text { get; set; }
+    private int Line { get; }
+    private int Index { get; }
+    private string Text { get; }
 
     public Cursor(int line, int index, string text)
     {
-        _line = line;
-        _index = index;
-        _text = text;
+        Line = line;
+        Index = index;
+        Text = text;
     }
 
     public int GetLine()
     {
-        return _line;
+        return Line;
     }
+
     public int GetIndex()
     {
-        return _index;
+        return Index;
     }
 
     public string GetText()
     {
-        return _text;
+        return Text;
     }
 }

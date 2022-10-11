@@ -4,20 +4,21 @@ var savedText = new TextProcessor(new List<string[]>(), Array.Empty<string>());
 
 string[] commands =
 {
-    "0. End program",
-    "1. Append text symbols to the end",
-    "2. Start the new line",
-    "3. Saving the information",
-    "4. Load the information",
-    "5. Print the current text to console",
-    "6. Insert the text by line and symbol index",
-    "7. Search",
-    "8. Clearing the console",
-    "9. Delete command",
+    "0.  End program",
+    "1.  Append text symbols to the end",
+    "2.  Start the new line",
+    "3.  Saving the information",
+    "4.  Load the information",
+    "5.  Print the current text to console",
+    "6.  Insert the text by line and symbol index",
+    "7.  Search",
+    "8.  Clearing the console",
+    "9.  Delete command",
     "10. Redo command",
     "11. Cut command",
-    "12. Paste command", 
-    "13 Copy command"
+    "12. Paste command",
+    "13. Copy command",
+    "14. Insert with replacement command"
 };
 
 while (true)
@@ -107,7 +108,7 @@ while (true)
         case "9":
         {
             savedText.Undo();
-            break;    
+            break;
         }
         case "10":
         {
@@ -139,6 +140,17 @@ while (true)
             var indexPaste = int.Parse(userInput9[1]);
             var lengthPaste = int.Parse(userInput9[2]);
             savedText.Copy(linePaste, indexPaste, lengthPaste);
+            break;
+        }
+        case "14":
+        {
+            Console.WriteLine("Choose line and index:");
+            var userInput10 = Console.ReadLine()!.Split(' ');
+            var lineInsert = int.Parse(userInput10[0]);
+            var indexInsert = int.Parse(userInput10[1]);
+            Console.WriteLine("Enter text to insert:");
+            var userInput11 = Console.ReadLine();
+            savedText.Insert(lineInsert, indexInsert, userInput11);
             break;
         }
     }

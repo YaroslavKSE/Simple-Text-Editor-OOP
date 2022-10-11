@@ -71,7 +71,6 @@ public class TextProcessor
         else
         {
             var substrings = SplitAt(text, column);
-            if (input != null)
             {
                 var wordLenght = 0;
                 while (wordLenght != input.Length)
@@ -101,49 +100,71 @@ public class TextProcessor
         }
     }
 
+    public void Insert(int line, int index, string? text)
+    {
+        while (line > _rows)
+        {
+            _savedText.Add(new string[] { });
+            _rows++;
+            _freeSpace = 0;
+        }
+
+        var wordLenght = 0;
+        while (text != null && wordLenght != text.Length)
+            for (var i = index; i < text.Length + index; i++)
+            {
+                _savedText[line - 1][i] = text[wordLenght].ToString();
+                wordLenght++;
+                if (wordLenght == text.Length) break;
+            }
+    }
+
     public string SearchSubstring(string? substring)
     {
         var sameLetters = "";
         var substringFound = "";
         var occurrence = 0;
         var counter = 0;
-        var substringArray = substring.ToArray();
-        foreach (var line in _savedText)
-            for (var i = 0; i < line.Length; i++)
-            {
-                if (line[i] == substringArray[counter].ToString() && counter < substring.Length)
+        if (substring != null)
+        {
+            var substringArray = substring.ToArray();
+            foreach (var line in _savedText)
+                for (var i = 0; i < line.Length; i++)
                 {
-                    counter++;
-                    sameLetters += line[i];
-                }
-
-                if (counter != 0 && counter <= substring.Length - 1)
-                    if (line[i + 1] != substringArray[counter].ToString())
+                    if (line[i] == substringArray[counter].ToString() && counter < substring.Length)
                     {
-                        sameLetters = "";
-                        counter = 0;
+                        counter++;
+                        sameLetters += line[i];
                     }
 
-                if (i + 1 >= line.Length && counter == 1)
-                {
-                    substringFound += $"[{_savedText.IndexOf(line) - 1}] ";
-                    counter = 0;
-                    occurrence++;
-                    sameLetters = "";
-                }
-
-                if (counter > substring.Length - 1 && i + 1 < line.Length)
-                    if (line[i + 1] != substringArray[substring.Length - 1].ToString())
-                    {
-                        counter = 0;
-                        if (sameLetters == substring)
+                    if (counter != 0 && counter <= substring.Length - 1)
+                        if (line[i + 1] != substringArray[counter].ToString())
                         {
-                            substringFound += $"[{_savedText.IndexOf(line)}] ";
-                            occurrence++;
                             sameLetters = "";
+                            counter = 0;
                         }
+
+                    if (i + 1 >= line.Length && counter == 1)
+                    {
+                        substringFound += $"[{_savedText.IndexOf(line) - 1}] ";
+                        counter = 0;
+                        occurrence++;
+                        sameLetters = "";
                     }
-            }
+
+                    if (counter > substring.Length - 1 && i + 1 < line.Length)
+                        if (line[i + 1] != substringArray[substring.Length - 1].ToString())
+                        {
+                            counter = 0;
+                            if (sameLetters == substring)
+                            {
+                                substringFound += $"[{_savedText.IndexOf(line)}] ";
+                                occurrence++;
+                                sameLetters = "";
+                            }
+                        }
+                }
+        }
 
         return $"{occurrence} times at line: {substringFound}.";
     }
@@ -266,10 +287,11 @@ public class TextProcessor
         {
             copiedElement += _savedText[line - 1][i];
         }
+
         var pointer = new Cursor(line, index, copiedElement);
         _ctrlz.Add(pointer);
     }
-    
+
     public void LoadToMemory(string[] array)
     {
         var counter = 0;
