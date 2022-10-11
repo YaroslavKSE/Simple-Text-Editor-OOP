@@ -13,8 +13,11 @@ string[] commands =
     "6. Insert the text by line and symbol index",
     "7. Search",
     "8. Clearing the console",
-    "9. Undo command",
-    "10. Redo command"
+    "9. Delete command",
+    "10. Redo command",
+    "11. Cut command",
+    "12. Paste command", 
+    "13 Copy command"
 };
 
 while (true)
@@ -126,6 +129,16 @@ while (true)
             var linePaste = int.Parse(userInput8[0]);
             var indexPaste = int.Parse(userInput8[1]);
             savedText.Paste(linePaste, indexPaste);
+            break;
+        }
+        case "13":
+        {
+            Console.WriteLine("Choose line, index and number of symbols: ");
+            var userInput9 = Console.ReadLine()!.Split(' ');
+            var linePaste = int.Parse(userInput9[0]);
+            var indexPaste = int.Parse(userInput9[1]);
+            var lengthPaste = int.Parse(userInput9[2]);
+            savedText.Copy(linePaste, indexPaste, lengthPaste);
             break;
         }
     }

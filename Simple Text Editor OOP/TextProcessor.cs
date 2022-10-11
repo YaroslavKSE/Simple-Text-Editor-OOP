@@ -259,6 +259,17 @@ public class TextProcessor
         AddTextInside(_ctrlz[^1].GetText(), line, index);
     }
 
+    public void Copy(int line, int index, int symbolsLength)
+    {
+        var copiedElement = "";
+        for (int i = index; i < index + symbolsLength; i++)
+        {
+            copiedElement += _savedText[line - 1][i];
+        }
+        var pointer = new Cursor(line, index, copiedElement);
+        _ctrlz.Add(pointer);
+    }
+    
     public void LoadToMemory(string[] array)
     {
         var counter = 0;
