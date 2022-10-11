@@ -12,7 +12,9 @@ string[] commands =
     "5. Print the current text to console",
     "6. Insert the text by line and symbol index",
     "7. Search",
-    "8. Clearing the console"
+    "8. Clearing the console",
+    "9. Undo command",
+    "10. Redo command"
 };
 
 while (true)
@@ -100,14 +102,31 @@ while (true)
             break;
         }
         case "9":
+        {
             savedText.Undo();
-            break;
+            break;    
+        }
         case "10":
         {
             savedText.Redo();
             break;
         }
-            
+        case "11":
+            Console.WriteLine("Choose line, index and number of symbols: ");
+            var userInput7 = Console.ReadLine()!.Split(' ');
+            var lineCut = int.Parse(userInput7[0]);
+            var indexCut = int.Parse(userInput7[1]);
+            var lengthCut = int.Parse(userInput7[2]);
+            savedText.CutArray(lineCut, indexCut, lengthCut);
+            break;
+        case "12":
+        {
+            Console.WriteLine("Choose line, and index: ");
+            var userInput8 = Console.ReadLine()!.Split(' ');
+            var linePaste = int.Parse(userInput8[0]);
+            var indexPaste = int.Parse(userInput8[1]);
+            savedText.Paste(linePaste, indexPaste);
+            break;
+        }
     }
-    
 }
