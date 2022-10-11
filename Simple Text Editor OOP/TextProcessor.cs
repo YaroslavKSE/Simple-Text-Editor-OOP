@@ -7,6 +7,7 @@ public class TextProcessor
     private int _freeSpace;
     private int _rows = 1;
     private List<Cursor> _ctrlz = new();
+    private List<Cursor> _redo = new();
 
     public TextProcessor(List<string[]> savedText, string[] savedLine)
     {
@@ -194,18 +195,19 @@ public class TextProcessor
 
         var pointer = new Cursor(line, index, deletedElement);
         _ctrlz.Add(pointer);
+        _redo.Add(pointer);
         _savedText[line - 1] = new string[_savedText[line - 1].Length - index - length];
         if (index != 0)
         {
             var firstPart = substrings[0].Split($"{deletedElement}");
             AddTextInside(firstPart[0], line, 0);
-            
+
             AddTextInside(substrings[1], line, firstPart[0].Length);
         }
 
         if (index == 0)
         {
-            AddTextInside(substrings[1], line, 0);    
+            AddTextInside(substrings[1], line, 0);
         }
     }
 
@@ -226,8 +228,26 @@ public class TextProcessor
             AddTextInside(_ctrlz[^1].GetText(), _ctrlz[^1].GetLine(), _ctrlz[^1].GetIndex());
             _ctrlz.Remove(_ctrlz[^1]);
         }
+        
+    }
 
-        // not implemented yet
+    public void Redo()
+    {
+        if (_redo.Count == 0)
+        {
+            return;
+        }
+        if (_redo.Count == 1)
+        {
+            Delete(_redo[0].GetLine(), _redo[0].GetIndex(), _redo[0].GetText().Length);
+            _redo.Remove(_redo[0]);
+        }
+        else
+        {
+            Delete(_redo[^1].GetLine(), _redo[^1].GetIndex(),_redo[^1].GetText().Length);
+            _redo.Remove(_redo[^1]);
+        }
+        
     }
 
     public void CutArray(int line, int index, int symbolsLength)
@@ -238,6 +258,7 @@ public class TextProcessor
             deletedElement += _savedText[line - 1][i];
             _savedText[line - 1][i] = "";
         }
+
         var pointer = new Cursor(line, index, deletedElement);
         _ctrlz.Add(pointer);
     }

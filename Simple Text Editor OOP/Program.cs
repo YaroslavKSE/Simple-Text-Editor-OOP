@@ -102,6 +102,12 @@ while (true)
         case "9":
             savedText.Undo();
             break;
+        case "10":
+        {
+            savedText.Redo();
+            break;
+        }
+            
     }
     
 }
