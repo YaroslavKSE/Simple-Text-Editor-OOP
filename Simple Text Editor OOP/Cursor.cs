@@ -1,6 +1,6 @@
 ﻿namespace Simple_Text_Editor_OOP;
 
-public readonly struct Cursor
+public  class Cursor
 {
     private int Line { get; }
     private int Index { get; }

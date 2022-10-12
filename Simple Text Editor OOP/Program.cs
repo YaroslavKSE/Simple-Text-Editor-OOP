@@ -1,6 +1,6 @@
 ﻿using Simple_Text_Editor_OOP;
 
-var savedText = new TextProcessor(new List<string[]>(), Array.Empty<string>());
+var savedText = new TextProcessor(new List<char[]>(), Array.Empty<char>());
 
 string[] commands =
 {
@@ -12,8 +12,9 @@ string[] commands =
     "5.  Print the current text to console",
     "6.  Insert the text by line and symbol index",
     "7.  Search",
-    "8.  Clearing the console",
-    "9.  Delete command",
+    "8.  Clearing the console", // not implemented
+    "8.  Delete command",
+    "9.  Undo command",
     "10. Redo command",
     "11. Cut command",
     "12. Paste command",

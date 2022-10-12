@@ -2,14 +2,14 @@
 
 public class TextProcessor
 {
-    private List<string[]> _savedText;
-    private string[] _savedLine;
+    private List<char[]> _savedText;
+    private char[] _savedLine;
     private int _freeSpace;
     private int _rows = 1;
     private readonly List<Cursor> _ctrlz = new();
     private readonly List<Cursor> _redo = new();
 
-    public TextProcessor(List<string[]> savedText, string[] savedLine)
+    public TextProcessor(List<char[]> savedText, char[] savedLine)
     {
         _savedText = savedText;
         _savedLine = savedLine;
@@ -26,7 +26,7 @@ public class TextProcessor
         while (input != null && wordLenght != input.Length)
             for (var i = _freeSpace; i < input.Length + _freeSpace; i++)
             {
-                _savedLine[i] = input[wordLenght].ToString();
+                _savedLine[i] = input[wordLenght];
                 wordLenght++;
             }
 
@@ -37,9 +37,9 @@ public class TextProcessor
             _savedText[_rows - 1] = _savedLine;
     }
 
-    private string[] ExpandArray(string[] original, int cols)
+    private char[] ExpandArray(char[] original, int cols)
     {
-        var newArray = new string[cols];
+        var newArray = new char[cols];
         for (var i = 0; i < original.Length; i++) newArray[i] = original[i];
 
         return newArray;
@@ -49,21 +49,24 @@ public class TextProcessor
     {
         while (line > _rows)
         {
-            _savedText.Add(new string[] { });
+            _savedText.Add(new char[] { });
             _rows++;
             _freeSpace = 0;
         }
 
         var text = GetLine(_savedText, line - 1);
-        _savedText[line - 1] = ExpandArray(_savedText[line - 1], input!.Length + _savedText[line - 1].Length);
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        if (_savedText[line - 1][column] == null)
+        if (input!.Length + _freeSpace > _savedText[line - 1].Length)
+        {
+            _savedText[line - 1] = ExpandArray(_savedText[line - 1], input.Length + _savedText[line - 1].Length);    
+        }
+        
+        if (_savedText[line - 1][column] == '\0')
         {
             var wordLenght = 0;
             while (wordLenght != input.Length)
                 for (var i = column; i < input.Length + column; i++)
                 {
-                    _savedText[line - 1][i] = input[wordLenght].ToString();
+                    _savedText[line - 1][i] = input[wordLenght];
                     wordLenght++;
                     if (wordLenght == input.Length) break;
                 }
@@ -76,7 +79,7 @@ public class TextProcessor
                 while (wordLenght != input.Length)
                     for (var i = column; i < column + input.Length; i++)
                     {
-                        _savedText[line - 1][i] = input[wordLenght].ToString();
+                        _savedText[line - 1][i] = input[wordLenght];
                         wordLenght++;
                         if (wordLenght == input.Length) break;
                     }
@@ -85,7 +88,7 @@ public class TextProcessor
                 for (var i = 0; i < column; i++)
                 {
                     if (counter1 > substrings[0].Length) break;
-                    _savedText[line - 1][i] = substrings[0][counter1].ToString();
+                    _savedText[line - 1][i] = substrings[0][counter1];
                     counter1++;
                 }
 
@@ -93,7 +96,7 @@ public class TextProcessor
                 for (var i = column + input.Length; i < _savedText[line - 1].Length; i++)
                 {
                     if (counter2 >= substrings[1].Length) break;
-                    _savedText[line - 1][i] = substrings[1][counter2].ToString();
+                    _savedText[line - 1][i] = substrings[1][counter2];
                     counter2++;
                 }
             }
@@ -104,7 +107,7 @@ public class TextProcessor
     {
         while (line > _rows)
         {
-            _savedText.Add(new string[] { });
+            _savedText.Add(new char[] { });
             _rows++;
             _freeSpace = 0;
         }
@@ -113,7 +116,7 @@ public class TextProcessor
         while (text != null && wordLenght != text.Length)
             for (var i = index; i < text.Length + index; i++)
             {
-                _savedText[line - 1][i] = text[wordLenght].ToString();
+                _savedText[line - 1][i] = text[wordLenght];
                 wordLenght++;
                 if (wordLenght == text.Length) break;
             }
@@ -131,14 +134,14 @@ public class TextProcessor
             foreach (var line in _savedText)
                 for (var i = 0; i < line.Length; i++)
                 {
-                    if (line[i] == substringArray[counter].ToString() && counter < substring.Length)
+                    if (line[i] == substringArray[counter] && counter < substring.Length)
                     {
                         counter++;
                         sameLetters += line[i];
                     }
 
                     if (counter != 0 && counter <= substring.Length - 1)
-                        if (line[i + 1] != substringArray[counter].ToString())
+                        if (line[i + 1] != substringArray[counter])
                         {
                             sameLetters = "";
                             counter = 0;
@@ -153,7 +156,7 @@ public class TextProcessor
                     }
 
                     if (counter > substring.Length - 1 && i + 1 < line.Length)
-                        if (line[i + 1] != substringArray[substring.Length - 1].ToString())
+                        if (line[i + 1] != substringArray[substring.Length - 1])
                         {
                             counter = 0;
                             if (sameLetters == substring)
@@ -169,7 +172,7 @@ public class TextProcessor
         return $"{occurrence} times at line: {substringFound}.";
     }
 
-    private string GetLine(List<string[]> array, int line)
+    private string GetLine(List<char[]> array, int line)
     {
         var text = "";
         for (var j = 0; j < array[line].Length; j++) text += array[line][j];
@@ -183,7 +186,14 @@ public class TextProcessor
         for (var i = 0; i < _savedText.Count; i++)
         {
             if (i != 0) text += "\n";
-            for (var j = 0; j < _savedText[i].Length; j++) text += _savedText[i][j];
+            for (var j = 0; j < _savedText[i].Length; j++)
+            {
+                if (_savedText[i][j] == '\0')
+                {
+                    continue;
+                }
+                text += _savedText[i][j];
+            }
         }
 
         return text;
@@ -211,25 +221,29 @@ public class TextProcessor
         for (int i = index; i < index + length; i++)
         {
             deletedElement += _savedText[line - 1][i];
-            _savedText[line - 1][i] = "";
+            _savedText[line - 1][i] = ' ';
         }
 
         var pointer = new Cursor(line, index, deletedElement);
         _ctrlz.Add(pointer);
         _redo.Add(pointer);
-        _savedText[line - 1] = new string[_savedText[line - 1].Length - index - length];
+        _savedText[line - 1] = new char[_savedText[line - 1].Length - index - length];
+        var temporary = _freeSpace;
         if (index != 0)
         {
             var firstPart = substrings[0].Split($"{deletedElement}");
+            _freeSpace = _savedText[line - 1].Length - length;
             AddTextInside(firstPart[0], line, 0);
-
             AddTextInside(substrings[1], line, firstPart[0].Length);
         }
+        
 
         if (index == 0)
         {
+            _freeSpace = _savedText[line - 1].Length - length;
             AddTextInside(substrings[1], line, 0);
         }
+        _freeSpace = temporary;
     }
 
     public void Undo()
@@ -298,8 +312,8 @@ public class TextProcessor
         _rows = 1;
         while (counter != array.Length)
         {
-            _savedText.Add(new string[] { });
-            _savedLine = new string[array[counter].Length];
+            _savedText.Add(new char[] { });
+            _savedLine = new char[array[counter].Length];
             AddText(array[counter]);
             counter++;
             _freeSpace = 0;
@@ -313,7 +327,7 @@ public class TextProcessor
 
     public void ClearText()
     {
-        _savedText = new List<string[]>();
+        _savedText = new List<char[]>();
         _freeSpace = 0;
     }
 
@@ -321,7 +335,7 @@ public class TextProcessor
     {
         _rows++;
         _freeSpace = 0;
-        _savedText.Add(new string[] { });
-        _savedLine = new string[] { };
+        _savedText.Add(new char[] { });
+        _savedLine = new char[] { };
     }
 }
