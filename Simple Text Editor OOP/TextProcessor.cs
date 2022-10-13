@@ -286,6 +286,7 @@ public class TextProcessor
 
     public void CutArray(int line, int index, int symbolsLength)
     {
+        Copy(line, index, symbolsLength);
         Delete(line, index, symbolsLength);
     }
 

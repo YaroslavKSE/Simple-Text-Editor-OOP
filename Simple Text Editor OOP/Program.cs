@@ -2,6 +2,8 @@
 
 var savedText = new TextProcessor(new List<char[]>(), Array.Empty<char>());
 
+var console = new ConsoleParser("", Array.Empty<int>());
+
 string[] commands =
 {
     "0.  End program",
@@ -38,34 +40,30 @@ while (true)
     {
         case "1":
         {
-            Console.WriteLine("Enter text to append:");
-            var userInput = Console.ReadLine();
-            savedText.AddText(userInput);
+            console.AskForText(1);
+            savedText.AddText(console.GetInput());
             break;
         }
         case "2":
         {
-            Console.WriteLine("New line started. Enter text to append:");
-            var userInput2 = Console.ReadLine();
+            console.AskForText(2);
             savedText.AddNewLine();
-            savedText.AddText(userInput2);
+            savedText.AddText(console.GetInput());
             break;
         }
         case "3":
         {
-            Console.WriteLine("Enter the file name for saving:");
-            var fileName = Console.ReadLine();
-            var path = $@"D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\{fileName}";
+            console.AskForText(3);
+            var path = $@"D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\{console.GetInput()}";
             var fileWriter = new FileWriter(path);
             fileWriter.WriteToFile(savedText.GetText());
             break;
         }
         case "4":
         {
-            Console.WriteLine("Enter the file name for loading:");
-            string? fileNameRead = Console.ReadLine();
-            var path = $@"D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\{fileNameRead}";
-            if (fileNameRead!.EndsWith(".txt") && File.Exists(path))
+            console.AskForText(4);
+            var path = $@"D:\C#\Simple Text Editor OOP\Simple Text Editor OOP\{console.GetInput()}";
+            if (console.GetInput().EndsWith(".txt") && File.Exists(path))
             {
                 var fileReader = new FileReader(path);
                 var lines = fileReader.ReadFile();
@@ -82,28 +80,20 @@ while (true)
         }
         case "6":
         {
-            Console.WriteLine("Choose line and index:");
-            var userInput3 = Console.ReadLine()!.Split(' ');
-            Console.WriteLine("Enter text to insert:");
-            var userInput4 = Console.ReadLine();
-            savedText.AddTextInside(userInput4, int.Parse(userInput3[0]), int.Parse(userInput3[1]));
+            console.AskForTextLineAndIndex();
+            savedText.AddTextInside(console.GetInput(), console.GetLine(), console.GetIndex());
             break;
         }
         case "7":
         {
-            Console.WriteLine("Choose world to search");
-            var userInput5 = Console.ReadLine();
-            Console.WriteLine($"Founded '{userInput5}' {savedText.SearchSubstring(userInput5)}");
+            console.AskForText(7);
+            Console.WriteLine($"Founded '{console.GetInput()}' {savedText.SearchSubstring(console.GetInput())}");
             break;
         }
         case "8":
         {
-            Console.WriteLine("Choose line, index and number of symbols: ");
-            var userInput6 = Console.ReadLine()!.Split(' ');
-            var line = int.Parse(userInput6[0]);
-            var index = int.Parse(userInput6[1]);
-            var length = int.Parse(userInput6[2]);
-            savedText.Delete(line, index, length);
+            console.AskForLineIndexAndLength();
+            savedText.Delete(console.GetLine(), console.GetIndex(), console.GetLength());
             break;
         }
         case "9":
@@ -117,41 +107,25 @@ while (true)
             break;
         }
         case "11":
-            Console.WriteLine("Choose line, index and number of symbols: ");
-            var userInput7 = Console.ReadLine()!.Split(' ');
-            var lineCut = int.Parse(userInput7[0]);
-            var indexCut = int.Parse(userInput7[1]);
-            var lengthCut = int.Parse(userInput7[2]);
-            savedText.CutArray(lineCut, indexCut, lengthCut);
+            console.AskForLineIndexAndLength();
+            savedText.CutArray(console.GetLine(), console.GetIndex(), console.GetLength());
             break;
         case "12":
         {
-            Console.WriteLine("Choose line, and index: ");
-            var userInput8 = Console.ReadLine()!.Split(' ');
-            var linePaste = int.Parse(userInput8[0]);
-            var indexPaste = int.Parse(userInput8[1]);
-            savedText.Paste(linePaste, indexPaste);
+            console.AskForLineAndIndex();
+            savedText.Paste(console.GetLine(), console.GetIndex());
             break;
         }
         case "13":
         {
-            Console.WriteLine("Choose line, index and number of symbols: ");
-            var userInput9 = Console.ReadLine()!.Split(' ');
-            var linePaste = int.Parse(userInput9[0]);
-            var indexPaste = int.Parse(userInput9[1]);
-            var lengthPaste = int.Parse(userInput9[2]);
-            savedText.Copy(linePaste, indexPaste, lengthPaste);
+            console.AskForLineIndexAndLength();
+            savedText.Copy(console.GetLine(), console.GetIndex(), console.GetLength());
             break;
         }
         case "14":
         {
-            Console.WriteLine("Choose line and index:");
-            var userInput10 = Console.ReadLine()!.Split(' ');
-            var lineInsert = int.Parse(userInput10[0]);
-            var indexInsert = int.Parse(userInput10[1]);
-            Console.WriteLine("Enter text to insert:");
-            var userInput11 = Console.ReadLine();
-            savedText.Insert(lineInsert, indexInsert, userInput11);
+            console.AskForTextLineAndIndex();
+            savedText.Insert(console.GetLine(), console.GetIndex(), console.GetInput());
             break;
         }
     }
